@@ -9,24 +9,16 @@ router.get('/', (req, res, next) => {
 
 // GET /users/profile
 router.get('/profile', (req, res, next) => {
+  // getting the user input
   const user = req.query.user;
-  
   
   let obj = {name: "Ivy Chan", university: "UC San Diego", major: "CE", minor: "Business", gradYear: 2022,
     classes: [
      {uuid: "0x0x0x3123", name: "CSE 100", year: 2020, quarter: "Spring"}
   ], input: { user: user }}
-
-  // const {major, minor} = obj;
-  // const major = obj.major, minor = obj.minor
-  // const minor = obj.minor
-
   res.json(obj);
 
 });
-
-//1 - parse input
-//2 - add input key to obj that contains the input
 
 // POST /users/setMajor: {user: uuid, major: uuid} => {error: string, uuid: string}
 router.post('/setMajor', (req, res, next) => {
@@ -34,7 +26,6 @@ router.post('/setMajor', (req, res, next) => {
   const major = req.query.major;
 
   let obj = {error: "", uuid: "AlphaChiMu", input: {user: user, major:major}}
-  
 
   res.json(obj);
 });
@@ -46,7 +37,6 @@ router.post('/setMinor', (req, res, next) => {
 
   let obj = {error: "", uuid: "AlphaChiMu", input: {user: user, minor:minor}}
   
-
   res.json(obj);
 });
 
