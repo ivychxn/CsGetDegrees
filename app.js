@@ -7,8 +7,9 @@ const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const infoRouter = require('./routes/info');
-
+const cors = require('cors');
 const app = express();
+app.use(cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -30,6 +31,7 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
+// good shit my bit
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
