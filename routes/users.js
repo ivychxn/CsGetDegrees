@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-//const { getUserById } = require("../db");
+const db = require("../db");
 
 // all requests are /users
 
@@ -9,71 +9,122 @@ router.get('/', (req, res, next) => {
   res.send('respond with a resource');
 });
 
+router.post('/profile', async (req, res) => {
+  const userId = req.query.user;
+  // get all params required to make a user @ivy
+
+  try {
+    db.createUser(userId);
+    res.status(200);
+    res.send("yeet")
+  } catch(err) {
+    res.status(500);
+    res.send(gg)
+  }
+})
+
 // GET /users/profile
 router.get('/profile', async (req, res, next) => {
   // getting the user input
-  const userId = req.query.user, user=req.query.user;
-  // try {
-  //   const user = await getUserById(userId);
-  //   res.json(user);
-  // } catch (error) {
-  //   res.status(400);
-  //   res.send("gg");
-  // }
-
-   let obj = {name: "Ivy Chan", university: "UC San Diego", major: "CE", minor: "Business", gradYear: 2022,
-     classes: [
-      {uuid: "0x0x0x3123", name: "CSE 100", year: 2020, quarter: "Spring"}
-   ], input: { user: user }}
-   res.json(obj);
-
+  const userId = req.query.user;
+  console.log(userId)
+  try {
+    const user = await db.getUserById(userId);
+    res.json(user);
+  } catch (error) {
+    res.status(400);
+    res.send("gg");
+  }
 });
 
 // POST /users/setMajor: {user: uuid, major: uuid} => {error: string, uuid: string}
-router.post('/setMajor', (req, res, next) => {
+router.post('/setMajor', async (req, res, next) => {
   const user = req.query.user;
   const major = req.query.major;
 
-  let obj = {error: "", uuid: "AlphaChiMu", input: {user: user, major:major}}
-
-  res.json(obj);
+  try {
+    await db.setUserMajor(user, major);
+    res.json({
+      error: "",
+      uuid: major
+    });
+  } catch(error) {
+    res.status(400)
+    res.json({
+      error: error,
+      uuid: ""
+    });
+  }  
 });
 
 // POST /users/setMinor: {user: uuid, minor: uuid} => {error: string, uuid: string}
-router.post('/setMinor', (req, res, next) => {
+router.post('/setMinor', async (req, res, next) => {
   const user = req.query.user;
-  const majminoror = req.query.minor;
+  const minor = req.query.minor;
 
-  let obj = {error: "", uuid: "AlphaChiMu", input: {user: user, minor:minor}}
-  
-  res.json(obj);
+  try {
+    await db.setUserMinor(user, minor);
+    res.json({
+      error: "",
+      uuid: minor
+    });
+  } catch(error) {
+    res.status(400)
+    res.json({
+      error: JSON.stringify(error),
+      uuid: major
+    });
+  }  
 });
 
-// POST /users/addSection:
-router.post('/addSection', (req, res, next) => {
-  // {user: uuid, sectionUUID: string, sectionYear: number, sectionQuarter: number, sectionName: string, sectionNotes: string}
-  const {user, sectionUUID, sectionYear, sectionQuarter, sectionName, sectionNotes} = req.query;
-  
+// POST /users/addClass:
+router.post('/addClass', async (req, res, next) => {
+  // {user: uuid, classUUID: string, sectionYear: number, sectionQuarter: number, sectionName: string, sectionNotes: string}
+  const {user, classUUID, sectionYear, sectionQuarter, sectionName, sectionNotes} = req.query;
+  try {
+    await db.addClass(user, classUUID, sectionYear, sectionQuarter, sectionName, sectionNotes);
+    res.json({
+      error: "",
+      status: "success"
+    })
+  } catch(error ) {
+    res.status(400);
+    res.json({
+      error: error
+    })
+  }
   let obj = {error: "", uuid: "AlphaChiMu", input: {user: user, sectionUUID, sectionYear, sectionQuarter, sectionName, sectionNotes}}
   res.json(obj);
 });
 
-// POST /user/editSection:
-router.post('/editSection', (req, res, next) => {
+// POST /user/editClass:
+router.post('/editClass', async (req, res, next) => {
   // {user: uuid, sectionUUID: string, sectionYear: number, sectionQuarter: number, sectionName: string, sectionNotes: string}
-  const {user, sectionUUID, sectionYear, sectionQuarter, sectionName, sectionNotes} = req.query;
+  const {user, classUUID, sectionYear, sectionQuarter, sectionName} = req.query;
 
-  let obj = {error: "", uuid: "AlphaChiMu", input: {user: user, sectionUUID, sectionYear, sectionQuarter, sectionName}}
-  res.json(obj);
+  try {
+    await db.editClass(user, classUUID, sectionYear, sectionQuarter, sectionName)
+    res.status(200);
+    res.json({success: true})
+  } catch(e) {
+    res.status(400);
+    res.json(e)
+  }
 });
 
-// POST /user/removeSection: {user: uuid, section: uuid} => {error: string, success: bool}
-router.post('/removeSection', (req, res, next) => {
+// POST /user/removeClass: {user: uuid, classUUID: uuid} => {error: string, success: bool}
+router.post('/removeClass', async (req, res, next) => {
   const user = req.query.user;
-  const section = req.query.section;
+  const classUUID = req.query.classUUID;
 
-  let obj = {error: "", success: 1, input: {user: user, section: section}}
-  res.json(obj);
+  try {
+    await db.removeClass(user, classUUID);
+    res.status(200);
+    res.json({success: true})
+  } catch(error) {
+    res.status(400);
+    res.json(error);
+  }
 });
 
 module.exports = router;

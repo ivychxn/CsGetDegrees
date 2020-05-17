@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const data = require("./data")
+data.init();
 
 // GET /info/colleges: {} => [ {uuid: string, name: string} ]
 router.get('/colleges/', (req, res) => {
@@ -13,8 +15,8 @@ router.get('/colleges/', (req, res) => {
 router.get('/colleges/:uuid/majors', (req, res) => {
     const uuid = req.params.uuid;
 
-    let major1 = { uuid: "alphasugmaligma", name: "cog sci" }
-    let major2 = { uuid: "rydgfkj", name: "comp sci" }
+    let major1 = { uuid: "cs26", name: "Computer Science" }
+    let major2 = { uuid: "cs25", name: "Computer Engineering" }
     let allMajors = [ major1, major2 ]
 
     res.json(allMajors);
@@ -24,8 +26,8 @@ router.get('/colleges/:uuid/majors', (req, res) => {
 router.get('/colleges/:uuid/minors', (req, res) => {
     const uuid = req.params.uuid;
 
-    let minor1 = { uuid: "alphasugmaligma", name: "business" }
-    let minor2 = { uuid: "rydgfkj", name: "raving" }
+    let minor1 = { uuid: "rady", name: "Business" }
+    let minor2 = { uuid: "lit", name: "Literature" }
     let allMinors = [ minor1, minor2 ]
 
     res.json(allMinors);
@@ -37,10 +39,8 @@ router.get('/colleges/:college_uuid/classes', (req, res) => {
     const major = req.query.major;
     const minor = req.query.minor;
 
-
-    let class1 = { uuid: "fdagergdf", name: "cse100" }
-    let class2 = { uuid: "ukejf", name: "cat2" }
-    let allClasses = [ class1, class2 ]
+    const allClasses = data.getAllClasses();
+    
     res.json(allClasses);
   });
 
@@ -49,10 +49,12 @@ router.get('/colleges/:college_uuid/classes', (req, res) => {
 router.get('/classes/:class_uuid', (req, res) => {
     const classUUID = req.params.class_uuid;
 
-    let obj = {title: "Advanced Data Structures", code: "CSE 100", quarters: [1,2,3], prereqs: ["jfkdsl"], postreqs: ["sdjf"],
-    classDesc: "bst go brrrr", prereqDesc: "nani tf", reviews: [{profName: "GARY GILLESPIE", percent: 420}], input: { class: uuid }}
+    const classData = data.getClassForId(classUUID);
 
-    res.json(obj);
+    // let obj = {title: "Advanced Data Structures", code: "CSE 100", quarters: [1,2,3], prereqs: ["jfkdsl"], postreqs: ["sdjf"],
+    // classDesc: "bst go brrrr", prereqDesc: "nani tf", reviews: [{profName: "GARY GILLESPIE", percent: 420}], input: { class: uuid }}
+
+    res.json(classData);
   });
 
 module.exports = router;
