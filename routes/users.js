@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+//const { getUserById } = require("../db");
+
 // all requests are /users
 
 /* GET users listing. */
@@ -8,15 +10,22 @@ router.get('/', (req, res, next) => {
 });
 
 // GET /users/profile
-router.get('/profile', (req, res, next) => {
+router.get('/profile', async (req, res, next) => {
   // getting the user input
-  const user = req.query.user;
-  
-  let obj = {name: "Ivy Chan", university: "UC San Diego", major: "CE", minor: "Business", gradYear: 2022,
-    classes: [
-     {uuid: "0x0x0x3123", name: "CSE 100", year: 2020, quarter: "Spring"}
-  ], input: { user: user }}
-  res.json(obj);
+  const userId = req.query.user, user=req.query.user;
+  // try {
+  //   const user = await getUserById(userId);
+  //   res.json(user);
+  // } catch (error) {
+  //   res.status(400);
+  //   res.send("gg");
+  // }
+
+   let obj = {name: "Ivy Chan", university: "UC San Diego", major: "CE", minor: "Business", gradYear: 2022,
+     classes: [
+      {uuid: "0x0x0x3123", name: "CSE 100", year: 2020, quarter: "Spring"}
+   ], input: { user: user }}
+   res.json(obj);
 
 });
 
@@ -42,19 +51,19 @@ router.post('/setMinor', (req, res, next) => {
 
 // POST /users/addSection:
 router.post('/addSection', (req, res, next) => {
-// {user: uuid, sectionUUID: string, sectionYear: number, sectionQuarter: number, sectionName: string} => {error: string, uuid: string}
-const {user, sectionUUID, sectionYear, sectionQuarter, sectionName} = req.query;
+  // {user: uuid, sectionUUID: string, sectionYear: number, sectionQuarter: number, sectionName: string, sectionNotes: string}
+  const {user, sectionUUID, sectionYear, sectionQuarter, sectionName, sectionNotes} = req.query;
   
-  let obj = {error: "", uuid: "AlphaChiMu", input: {user: user, sectionUUID, sectionYear, sectionQuarter, sectionName}}
+  let obj = {error: "", uuid: "AlphaChiMu", input: {user: user, sectionUUID, sectionYear, sectionQuarter, sectionName, sectionNotes}}
   res.json(obj);
 });
 
 // POST /user/editSection:
 router.post('/editSection', (req, res, next) => {
-// {user: uuid, sectionUUID: string, sectionYear: number, sectionQuarter: number, sectionName: string} => {error: string, uuid: string}
-const {user, sectionUUID, sectionYear, sectionQuarter, sectionName} = req.query;
+  // {user: uuid, sectionUUID: string, sectionYear: number, sectionQuarter: number, sectionName: string, sectionNotes: string}
+  const {user, sectionUUID, sectionYear, sectionQuarter, sectionName, sectionNotes} = req.query;
 
-let obj = {error: "", uuid: "AlphaChiMu", input: {user: user, sectionUUID, sectionYear, sectionQuarter, sectionName}}
+  let obj = {error: "", uuid: "AlphaChiMu", input: {user: user, sectionUUID, sectionYear, sectionQuarter, sectionName}}
   res.json(obj);
 });
 
