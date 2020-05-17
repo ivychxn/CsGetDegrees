@@ -11,15 +11,20 @@ router.get('/', (req, res, next) => {
 
 router.post('/profile', async (req, res) => {
   const userId = req.query.user;
+  //text on chat if u need anything i just sorta have to think in silence oops
   // get all params required to make a user @ivy
+  // POST {user: uuid, college: uuid, major: uuid, minor: uuid, gradYear: int} =>
+  const {college, major, minor, gradYear} = req.query;
 
+  // {error: string, success: bool}
   try {
-    db.createUser(userId);
+    await db.createUser(userId, college, major, minor, gradYear);
     res.status(200);
     res.send("yeet")
   } catch(err) {
+    console.log(err) // log the error
     res.status(500);
-    res.send(gg)
+    res.send(err)
   }
 })
 

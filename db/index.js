@@ -3,6 +3,23 @@ const config = require('../config');
 const app = firebase.initializeApp(config);
 const db = app.firestore();
 
+const createUser = (userId, college, major, minor, gradYear) => {
+    return new Promise((resolve, reject) => {
+        db.collection("/users").doc(userId).set({
+            name: userId,
+            state: college,
+            country: major,
+            minor: minor,
+            gradYear: gradYear,
+        }).then(() => {
+            resolve();
+        })//:))) 
+        .catch(error => {
+            reject(error);
+        })
+    });
+}
+
 const getUserById = (userId) => {
     return new Promise((resolve, reject) => {
 
@@ -154,5 +171,6 @@ module.exports = {
     setUserMinor,
     addClass,
     removeClass,
-    editClass
+    editClass,
+    createUser
 }
